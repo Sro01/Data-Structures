@@ -90,24 +90,48 @@ int main()
 
 int insertSortedLL(LinkedList *ll, int item)
 {
-	/* add your code here */
+	ListNode *cur;
+	ListNode *prev = cur;
+	int index = 0;
+
+	if (ll->head == NULL) {
+		insertNode(ll, 0, item);
+		return 0;
+	}
+	
+	cur = ll->head;
+	while(index < ll->size + 1) {
+		if (cur == NULL) {
+			insertNode(ll, ll->size, item);
+			return ll->size - 1;
+		}
+		if (cur->item == item) {
+			return -1;
+		}
+		if (cur->item > item) {
+			insertNode(ll, index, item);
+			return index;
+		}
+		cur = cur->next;
+		index++;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 void printList(LinkedList *ll){
 
-	ListNode *cur;
-	if (ll == NULL)
+	ListNode *cur;  // 현재 노드를 가리키는 포인터
+	if (ll == NULL) // 리스트가 비어있으면 리턴
 		return;
-	cur = ll->head;
+	cur = ll->head; // 현재 노드 포인터에 헤드 노드 저장
 
-	if (cur == NULL)
+	if (cur == NULL) // 헤드노드가 없으면 비어있음
 		printf("Empty");
-	while (cur != NULL)
+	while (cur != NULL) // 노드의 끝까지
 	{
-		printf("%d ", cur->item);
-		cur = cur->next;
+		printf("%d ", cur->item); // 현재 값을 출력
+		cur = cur->next; // 다음 노드로 이동
 	}
 	printf("\n");
 }
@@ -115,13 +139,13 @@ void printList(LinkedList *ll){
 
 void removeAllItems(LinkedList *ll)
 {
-	ListNode *cur = ll->head;
-	ListNode *tmp;
+	ListNode *cur = ll->head; // 헤드 노드부터 저장
+	ListNode *tmp; // 노드를 가리키는 포인터
 
-	while (cur != NULL){
-		tmp = cur->next;
-		free(cur);
-		cur = tmp;
+	while (cur != NULL){ // 노드의 끝까지
+		tmp = cur->next; // tmp는 다음 노드를 가리킴
+		free(cur); // 현재 노드를 해제
+		cur = tmp; // 다음 노드로 이동
 	}
 	ll->head = NULL;
 	ll->size = 0;
@@ -130,21 +154,21 @@ void removeAllItems(LinkedList *ll)
 
 ListNode *findNode(LinkedList *ll, int index){
 
-	ListNode *temp;
+	ListNode *temp; // 노드를 가리키는 포인터
 
-	if (ll == NULL || index < 0 || index >= ll->size)
+	if (ll == NULL || index < 0 || index >= ll->size) // 리스트가 비어있거나 인덱스가 범위 밖이면
 		return NULL;
 
-	temp = ll->head;
+	temp = ll->head; // 헤드노드 저장
 
 	if (temp == NULL || index < 0)
 		return NULL;
 
 	while (index > 0){
-		temp = temp->next;
-		if (temp == NULL)
+		temp = temp->next; // 다음 노드로 이동
+		if (temp == NULL)  // 노드 끝을 만나면 리턴
 			return NULL;
-		index--;
+		index--;	// head부터 index까지 index번 반복하며 해당 노드의 메모리 주소를 반환
 	}
 
 	return temp;

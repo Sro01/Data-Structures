@@ -113,10 +113,52 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
-int identical(BTNode *tree1, BTNode *tree2)
+int identical(BTNode *tree1, BTNode *tree2) {
+    Stack stk1;
+    Stack stk2;
+    BTNode *temp1;
+    BTNode *temp2;
+    stk1.top = NULL;
+    stk2.top = NULL;
 
-{
-   /* add your code here */
+    if (tree1 == NULL && tree2 == NULL) return 1;
+    if (tree1 == NULL || tree2 == NULL) return 0;
+
+    // 루트부터 순회
+    push(&stk1, tree1);
+    push(&stk2, tree2);
+
+    // 스택 둘 중 하나라도 top이 NULL이 아니면 계속 실행 (둘 다 top이 NULL이어야 종료)
+    while(stk1.top != NULL || stk2.top != NULL) {
+        if (stk1.top == NULL || stk2.top == NULL) return 0;
+
+        temp1 = pop(&stk1);
+        temp2 = pop(&stk2);
+
+        // 두 tree의 item이 다르면 종료
+        if (temp1->item != temp2->item) return 0;
+        
+        // 두 tree의 item이 같으면
+        else {
+            // 둘 다 NULL이거나 둘 다 NULL이 아니어야 함 (둘 중 하나라도 left가 NULL이면 다른 구조의 트리)            
+            if (temp1->left != NULL && temp2->left != NULL) {
+                // 각 트리의 left를 스택에 push
+                push(&stk1,temp1->left);
+                push(&stk2,temp2->left);
+            } else if (temp1->left == NULL && temp2->left == NULL);
+            else return 0;
+
+            // 둘 다 right를 가지고 있어야 함
+            if (temp1->right != NULL && temp2->right != NULL) {
+                // 각 트리의 right를 스택에 push
+                push(&stk1,temp1->right);
+                push(&stk2,temp2->right);
+            } else if (temp1->right == NULL && temp2->right == NULL);
+            else return 0;
+        }
+    }
+
+    return 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -146,38 +188,39 @@ BTNode *createTree()
     printf("Enter an integer value for the root: ");
     if(scanf("%d",&item) > 0)
     {
-        root = createBTNode(item);
-        push(&stk,root);
+        root = createBTNode(item); // 트리 루트 노드 생성
+        push(&stk,root); // 루트를 스택에 push
     }
     else
     {
-        scanf("%c",&s);
+        scanf("%c",&s); // 숫자값이 아니라면 스택에 push 하지 않음
     }
 
-    while((temp =pop(&stk)) != NULL)
+    while((temp=pop(&stk)) != NULL)
     {
 
         printf("Enter an integer value for the Left child of %d: ", temp->item);
 
-        if(scanf("%d",&item)> 0)
+        if(scanf("%d",&item) > 0) // 숫자값을 입력 받으면
         {
-            temp->left = createBTNode(item);
+            temp->left = createBTNode(item); // 왼쪽 노드 생성, left 포인터 초기화
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c",&s); // 숫자가 아니면 그대로 temp->left는 NULL을 가리킴
         }
 
         printf("Enter an integer value for the Right child of %d: ", temp->item);
-        if(scanf("%d",&item)>0)
+        if(scanf("%d",&item) > 0)
         {
-            temp->right = createBTNode(item);
+            temp->right = createBTNode(item); // 오른쪽 노드 생성, right 포인터 초기화
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c",&s); // 숫자가 아니면 그대로 temp->right NULL을 가리킴
         }
 
+        // 왼쪽 노드를 먼저 입력 받기 때문에 오른쪽 노드부터 push해야 왼쪽 노드 먼저 pop됨
         if(temp->right != NULL)
             push(&stk,temp->right);
         if(temp->left != NULL)
@@ -186,7 +229,7 @@ BTNode *createTree()
     return root;
 }
 
-void push( Stack *stk, BTNode *node){
+void push(Stack *stk, BTNode *node) {
     StackNode *temp;
 
     temp = malloc(sizeof(StackNode));

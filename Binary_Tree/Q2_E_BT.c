@@ -97,7 +97,12 @@ int main()
 int maxHeight(BTNode *node)
 
 {
-    /* add your code here */
+    BTNode *temp = node;
+
+    if (temp == NULL) return -1;
+    else {
+        // 왼쪽 노드부터 empty일 때까지 돌면서
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
