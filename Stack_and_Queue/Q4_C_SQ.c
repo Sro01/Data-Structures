@@ -112,7 +112,26 @@ int main()
 
 void reverse(Queue *q)
 {
-/* add your code here */
+	LinkedList *q_ll = &(q->ll);
+
+	if (isEmptyQueue(q))
+		return;
+	
+	Stack s;
+
+	s.ll.head = NULL;
+	s.ll.size = 0;
+	s.ll.tail = NULL;
+
+	ListNode *cur = q_ll->head;
+
+	while(cur != NULL) {
+		push(&s, cur->item);
+		cur = cur->next;
+	}
+	removeAllItems(q_ll);
+
+	q->ll.head = s.ll.head;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
